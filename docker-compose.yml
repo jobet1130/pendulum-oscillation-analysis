@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  pendulum-analysis:
+    container_name: pendulum_oscillation_analysis
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pendulum/oscillation:latest
+    ports:
+      - "8000:8000"
+    environment:
+      PYTHONUNBUFFERED: 1
+    volumes:
+      - .:/app
+    restart: unless-stopped
