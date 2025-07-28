@@ -1,0 +1,20 @@
+name: pendulum-env
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.12
+  - numpy
+  - pandas
+  - matplotlib
+  - seaborn
+  - scipy
+  - jupyterlab
+  - ipywidgets
+  - notebook
+  - scikit-learn
+  - pip
+  - pip:
+      - pandas
+      - poetry
+      
