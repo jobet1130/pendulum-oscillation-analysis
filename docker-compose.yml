@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
     image: pendulum-oscillation-analysis:latest
     ports:
-      - "8000:8000"
+      - "8889:8889"
     environment:
       PYTHONUNBUFFERED: 1
     volumes:
