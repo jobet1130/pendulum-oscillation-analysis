@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: pendulum/oscillation:latest
+    image: pendulum-oscillation-analysis:latest
     ports:
       - "8000:8000"
     environment:
