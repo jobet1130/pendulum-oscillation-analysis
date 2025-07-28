@@ -1,0 +1,99 @@
+name: CI/CD Pipeline - Pendulum Oscillation Analysis
+on:
+  push:
+    branches:
+      - "master"
+  pull_request:
+    branches:
+      - "master"
+
+env:
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  dev-check:
+    name: 🔍 Dev Package & Metadata Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 📦 Check requirements and metadata
+        run: |
+          echo "Checking requirements.txt..."
+          test -f requirements.txt || (echo "❌ requirements.txt missing!" && exit 1)
+
+          echo "Checking pyproject.toml..."
+          test -f pyproject.toml || (echo "❌ pyproject.toml missing!" && exit 1)
+
+          echo "✅ All metadata files found."
+
+      - name: ✅ Run Tests (Dev)
+        run: |
+          echo "No test suite yet"
+          # pytest tests/
+
+  deploy:
+    name: 🚀 Deploy to Hugging Face
+    needs: dev-check
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 🤗 Hugging Face Login & Upload
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          pip install -U "huggingface_hub[cli]"
+          huggingface-cli login --token "${HF_TOKEN}"
+
+          if [ -d "models" ]; then
+            huggingface-cli upload jobet1995/power_forecasting_project models/ --repo-type model --commit-message "CI/CD: Upload models to Hugging Face"
+          fi
+
+          if [ -d "data" ]; then
+            huggingface-cli upload jobet1995/pendulum-oscillation-analysis-data data/ --repo-type dataset --commit-message "CI/CD: Upload dataset to Hugging Face"
+          fi
+
+  docker:
+    name: 🐳 Build & Push Docker Image
+    needs: deploy
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔐 Log in to DockerHub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: 🐳 Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/pendulum-oscillation-analysis:latest .
+
+      - name: 🚀 Push Docker image to DockerHub
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/pendulum-oscillation-analysis:latest
