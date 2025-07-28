@@ -1,0 +1,79 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Environment files
+.env
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Conda environment
+*.conda
+*.yml
+
+# Virtualenv
+poetry.lock
+poetry.toml
+
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Data files
+*.db
+*.sqlite
+*.h5
+*.hdf5
+*.parquet
+
+# Output and reports
+/output/
+*.log
+*.out
+*.bak
+*.tmp
+
+# Figures and generated plots
+/figures/*.png
+/figures/*.pdf
+/figures/*.svg
+
+# HTML and web reports
+/web_reports/
+*.html
+
+# Python build
+build/
+dist/
+*.egg-info/
+
+# Test coverage
+.coverage
+htmlcov/
+.cache/
+
+# Logs
+*.log
+*.err
+*.trace
